@@ -14,6 +14,9 @@ const UserSchema = new mongoose.Schema ({
         type: String,
         required: true
     },
+    senhaHash: {
+        type: String,
+    },
     telefones: [{
         numero: String,
         ddd: Number,
@@ -32,15 +35,14 @@ const UserSchema = new mongoose.Schema ({
     ultimo_login:{
       type:Date,
       default: Date.now
-    },
+    }
 });
 
-UserSchema.pre('save', async function(next) {
-    const hash = await bcrypt.hash(this.senha, 8)
-    this.senha = hash;
-  
-    next();
-  })
-
+UserSchema.pre('save', async function() {
+    if (this.isNew) {
+    this.senhaHash = await bcrypt.hash(this.senha, 8);
+    this.senha = undefined;
+  }
+});
 
 module.exports = mongoose.model('User', UserSchema);
