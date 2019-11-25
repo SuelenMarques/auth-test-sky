@@ -12,7 +12,7 @@ class SessionController {
       senha: yup.string()
           .required()
   });
-  
+
     const {email, senha } = req.body;
 
     const user = await User.findOne({ email });
@@ -21,11 +21,11 @@ class SessionController {
       return res.status(401).json({ error: 'Usuário não encontrado'});
     }
 
-    // if(!(await user.checkPassword(senha))) {
-    //   return res.status(401).json({ error: 'Senha não corresponde'});
-    // }
+    if(!(await user.checkPassword(senha))) {
+      return res.status(401).json({ error: 'Senha não corresponde'});
+    }
 
-    const { id, nome } = user;
+    const { id, nome, email } = user;
 
     return res.json({
       user: {
