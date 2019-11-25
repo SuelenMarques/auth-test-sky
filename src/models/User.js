@@ -30,9 +30,6 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  token: {
-    type: String,
-  },
   ultimo_login: {
     type: Date,
     default: Date.now
@@ -44,6 +41,10 @@ UserSchema.pre('save', async function () {
     this.senhaHash = await bcrypt.hash(this.senha, 8);
     this.senha = undefined;
   }
-});
+})
 
-module.exports = mongoose.model('User', UserSchema);
+// checkPassword(senha) {
+//   return bcrypt.compare(senha, this.senhaHash);
+// }
+
+module.exports = mongoose.model('User', UserSchema)

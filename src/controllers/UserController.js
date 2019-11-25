@@ -1,8 +1,23 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const yup = require('yup');
 
 module.exports = {
     async store(req, res) {
+        const schema = yup.object().shape({
+            nome: yup.string().required(),
+            email: yup.string()
+                .email()
+                .required(),
+            senha: yup.string()
+                .required()
+                .min(6),
+        });
+
+        if(!(await schema.isValid(req.body))) {
+            return res.status(400).json({ error: 'Falha na validação'});
+        }
+
         const userExists = await User.findOne({ email: req.body.email });
 
         if (userExists) {
@@ -16,4 +31,7 @@ module.exports = {
             email
         });
     }
+    // async update(req, res) {
+    //     return req.json({ ok: true});
+    // }
 };
