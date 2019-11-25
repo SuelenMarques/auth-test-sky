@@ -7,10 +7,13 @@ module.exports = {
 
         if (userExists) {
             return res.status(400).json({ error: "E-mail já existente" });
-        } 
+        }
 
-        const usuarios = await User.create(req.body);
+        const { nome, email} = await User.create(req.body);
 
-        return res.json(usuarios);
+        return res.json({
+            nome,
+            email
+        });
     }
 };
