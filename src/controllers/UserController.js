@@ -3,6 +3,11 @@ const User = mongoose.model('User');
 const yup = require('yup');
 
 module.exports = {
+    async index(req,res) {
+        const usuarios = await User.find();
+        return res.json(usuarios);
+    },
+
     async store(req, res) {
         const schema = yup.object().shape({
             nome: yup.string().required(),

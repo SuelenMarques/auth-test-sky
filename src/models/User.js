@@ -43,6 +43,16 @@ UserSchema.pre('save', async function () {
   }
 })
 
+async function checkPassword(req, res, next) {
+  const user = await user.findOne({ email: req.body.email });
+  const senhaCorreta = await bcrypt.compare(req.body.senha, user.senhaHash);
+  if (!senhaCorreta) {
+    return res.status(400).json({ error: 'Senha não corresponde' });
+  }
+  return next();
+}
+
+
 // checkPassword(senha) {
 //   return bcrypt.compare(senha, this.senhaHash);
 // }
